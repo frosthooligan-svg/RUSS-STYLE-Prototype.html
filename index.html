@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>Русский стиль · прототип</title>
+<style>
+:root{--room:#000;color-scheme:dark}
+:root.desktop{--room:#8a8a8a}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--room);overflow:hidden;overscroll-behavior:none}
+body{display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#fit{position:relative;flex:none;overflow:hidden;background:#000}
+.desktop #fit{border-radius:44px;clip-path:inset(0 round 44px);box-shadow:0 2px 6px rgba(0,0,0,.25),0 30px 70px rgba(0,0,0,.38)}
+#stage{position:absolute;left:0;top:0;width:390px;height:844px;transform-origin:0 0;background:#000;overflow:hidden;isolation:isolate}
+#stage img.scr{position:absolute;inset:0;width:390px;height:844px;display:block;pointer-events:none}
+#imgB{opacity:0}
+#fx{position:absolute;inset:0;pointer-events:none}
+#fx .sym{position:absolute;left:62px;top:126px;width:267px;height:275px;mix-blend-mode:multiply;transform-origin:50% 50%;will-change:transform,opacity}
+#fx .noti{position:absolute;left:8px;top:128px;width:374px;height:100px;border-radius:32px;background-size:374px 100px;box-shadow:0 10px 28px rgba(0,0,0,.14),0 1px 3px rgba(0,0,0,.08);will-change:transform,opacity}
+#fx .scroll{position:absolute;overflow-x:hidden;overflow-y:auto;pointer-events:auto;scrollbar-width:none;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#fx .scroll::-webkit-scrollbar{display:none}
+#fx .strip{position:relative;width:100%}
+#fx .strip img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+#fx .fr{position:absolute;top:70px;width:38px;height:641px;opacity:0}
+#fx .fr.l{left:0} #fx .fr.r{left:352px}
+#fx .pill{position:absolute;box-shadow:0 2px 14px rgba(0,0,0,.08)}
+#fx .pill.back{left:8px;top:73px;width:82px;height:48px;border-radius:24px}
+#fx .pill.giga{left:8px;top:656px;width:374px;height:70px;border-radius:35px}
+#fx.debug .hs{background:rgba(0,160,255,.22);box-shadow:inset 0 0 0 1px rgba(0,160,255,.9)}
+#band{position:absolute;left:0;top:711px;width:390px;height:51px;background:#000;opacity:0;pointer-events:none}
+.atmo{position:absolute;left:0;width:390px;opacity:0;pointer-events:none;background:radial-gradient(ellipse 360px 440px at 50% 104%,#00592f 4%,#003f21 41%,rgba(0,24,12,.53) 78%,transparent 100%),#000}
+.atmo.page{top:55px;height:707px}
+.atmo.full{top:0;height:762px;background:#000}
+#gl{position:absolute;inset:0;width:390px;height:844px;opacity:0;visibility:hidden;pointer-events:none}
+#hot{position:absolute;inset:0;pointer-events:none}
+.hs{position:absolute;pointer-events:auto;appearance:none;-webkit-appearance:none;border:0;padding:0;margin:0;background:transparent;border-radius:18px;cursor:pointer;outline:none}
+.hs:focus-visible{box-shadow:0 0 0 2px #fff,0 0 0 4px #0a7a3b}
+#hot.hint .hs,#hot.hint~* .hs{animation:hint .9s ease-out}
+@keyframes hint{0%{background:rgba(120,255,170,0);box-shadow:inset 0 0 0 0 rgba(120,255,170,0)}25%{background:rgba(120,255,170,.20);box-shadow:inset 0 0 0 1.5px rgba(160,255,200,.85)}100%{background:rgba(120,255,170,0);box-shadow:inset 0 0 0 1.5px rgba(160,255,200,0)}}
+#hot.debug .hs{background:rgba(0,160,255,.22);box-shadow:inset 0 0 0 1px rgba(0,160,255,.9)}
+#boot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#ffffff80;font:13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;pointer-events:none}
+@media (prefers-reduced-motion:reduce){#hot.hint .hs{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<div id="fit">
+  <main id="stage" aria-label="Прототип «Русский стиль»">
+    <img id="imgA" class="scr" alt="" draggable="false">
+    <img id="imgB" class="scr" alt="" draggable="false">
+    <div id="fx"></div>
+    <div id="band"></div>
+    <div id="atmo" class="atmo page"></div>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div id="hot"></div>
+    <div id="boot">Загрузка…</div>
+  </main>
+</div>
+<script src="vendor/three.min.js"></script>
+<script>window.RS_SCREENS={"g01": "screens/g01.webp", "g02": "screens/g02.webp", "g03": "screens/g03.webp", "g04": "screens/g04.webp", "g05": "screens/g05.webp", "g06": "screens/g06.webp", "g07": "screens/g07.webp", "j01": "screens/j01.webp", "j02": "screens/j02.webp", "j03": "screens/j03.webp", "j05": "screens/j05.webp", "j06": "screens/j06.webp", "j07": "screens/j07.webp", "j08": "screens/j08.webp", "j09": "screens/j09.webp", "j10": "screens/j10.webp", "j11": "screens/j11.webp", "j12": "screens/j12.webp", "j13": "screens/j13.webp", "j16": "screens/j16.webp", "j16f": "screens/j16f.webp", "j17": "screens/j17.webp", "j18": "screens/j18.webp", "j19": "screens/j19.webp", "j20": "screens/j20.webp", "j21": "screens/j21.webp", "j22": "screens/j22.webp", "j23": "screens/j23.webp", "j24": "screens/j24.webp", "j25": "screens/j25.webp", "j26": "screens/j26.webp", "j27": "screens/j27.webp", "m01": "screens/m01.webp", "m02": "screens/m02.webp", "m03": "screens/m03.webp", "m04": "screens/m04.webp", "m05": "screens/m05.webp", "m06": "screens/m06.webp", "m07": "screens/m07.webp", "m08": "screens/m08.webp", "m09": "screens/m09.webp", "o02": "screens/o02.webp", "p01": "screens/p01.webp", "p02": "screens/p02.webp", "p03": "screens/p03.webp", "p04": "screens/p04.webp", "p05": "screens/p05.webp", "p06": "screens/p06.webp", "p07": "screens/p07.webp"};window.RS_ASSETS={"paper": "assets/paper.webp", "symbol": "assets/symbol.webp", "notif": "assets/notif.webp", "scroll": {"p04": {"strip": "assets/p04_strip.webp", "frameL": "assets/p04_frameL.webp", "frameR": "assets/p04_frameR.webp", "back": "assets/p04_back.webp", "giga": "assets/p04_giga.webp"}}, "tint": [0.9442, 0.9586, 0.9744]};</script>
+<script src="app.js"></script>
+</body>
+</html>
